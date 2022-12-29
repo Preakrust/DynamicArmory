@@ -74,10 +74,10 @@ UPDATE_PLUGINS_EVENT.Event:Connect(function(data)
                             shirt.ShirtTemplate = child.ShirtTemplate
                             shirt.Color3 = child.Color3
 
-                            if ViewModel:FindFirstChild("BodyColors") and character:FindFirstChild("BodyColors") then
-                                local bodyColors = ViewModel:FindFirstChild("BodyColors")
-                                bodyColors.LeftArmColor = character:FindFirstChild("BodyColors").LeftArmColor
-                                bodyColors.RightArmColor = character:FindFirstChild("BodyColors").RightArmColor
+                            if ViewModel:FindFirstChildWhichIsA("BodyColors") and character:FindFirstChildWhichIsA("BodyColors") then
+                                local bodyColors = ViewModel:FindFirstChildWhichIsA("BodyColors")
+                                bodyColors.LeftArmColor = character:FindFirstChildWhichIsA("BodyColors").LeftArmColor
+                                bodyColors.RightArmColor = character:FindFirstChildWhichIsA("BodyColors").RightArmColor
                             end
                         end
                     end
