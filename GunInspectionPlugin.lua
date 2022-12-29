@@ -1,4 +1,4 @@
-game.ReplicatedStorage.Update_Plugins.Event:Connect(function(data)
+game.ReplicatedStorage.DELTA_API_STORAGE.Update_Plugins.Event:Connect(function(data)
     local Inpsecting = false
     if data.Method == "Gun_Inspecting_Started" then
         -- Update your gun engine plugins here, using the Gun_ID passed in the data argument
