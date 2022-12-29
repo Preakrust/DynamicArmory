@@ -21,6 +21,8 @@ local ViewModel = nil
 local prevOscillatingForce = 0
 local prevBreathOscillatingForce = 0
 
+Instance.new("NumberValue", script).Name = "Alpha"
+
 UPDATE_PLUGINS_EVENT.Event:Connect(function(data)
     if data.Method == "Equipped" then
         EQUIPPED = true
