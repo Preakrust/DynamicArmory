@@ -9,7 +9,7 @@ local third_person = false
 
 local RenderViewModel = false
 
-local Shooting = false
+local Shooting = false 
 local Inspecting = false
 local Bolting = false
 
