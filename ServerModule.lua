@@ -28,7 +28,7 @@ local Animations_Module = nil
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 --//Plugins
-local Update_Plugins = ReplicatedStorage.Update_Plugins
+local Update_Plugins = ReplicatedStorage.DELTA_API_STORAGE.Update_Plugins
 --//Main_Storage
 local Storage = ReplicatedStorage:WaitForChild("DELTA_API_STORAGE")
 
