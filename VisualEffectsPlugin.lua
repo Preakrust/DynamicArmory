@@ -68,12 +68,17 @@ UPDATE_PLUGINS_EVENT.Event:Connect(function(data)
                 
                 if ViewModel then
 
-                    for i, v in pairs(game.Players.LocalPlayer.Character:GetChildren()) do
-                        if v:IsA("Shirt") then
-                            local Template, Color = v.ShirtTemplate, v.Color3
-                            local Shirt = ViewModel.Shirt
-                            Shirt.ShirtTemplate = Template
-                            Shirt.Color3 = Color
+                    for _, child in pairs(game.Players.LocalPlayer.Character:GetChildren()) do
+                        if child:IsA("Shirt") then
+                            local shirt = ViewModel.Shirt
+                            shirt.ShirtTemplate = child.ShirtTemplate
+                            shirt.Color3 = child.Color3
+
+                            if ViewModel:FindFirstChild("BodyColors") and character:FindFirstChild("BodyColors") then
+                                local bodyColors = ViewModel:FindFirstChild("BodyColors")
+                                bodyColors.LeftArmColor = character:FindFirstChild("BodyColors").LeftArmColor
+                                bodyColors.RightArmColor = character:FindFirstChild("BodyColors").RightArmColor
+                            end
                         end
                     end
 
