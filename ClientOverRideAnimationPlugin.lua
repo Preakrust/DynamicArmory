@@ -3,7 +3,7 @@
 local RBX_SIGNAL
 local A = true
 
-game.ReplicatedStorage.Update_Plugins.Event:Connect(function(data)
+game.ReplicatedStorage.DELTA_API_STORAGE.Update_Plugins.Event:Connect(function(data)
     local Inpsecting = false
     if data.Method == "Equipped" then
         
