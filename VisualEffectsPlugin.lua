@@ -2,7 +2,7 @@
 local API = require(script.Parent.Parent.Parent.ClientModule)
 
 ----------[Events]----------
-local UPDATE_PLUGINS_EVENT = game.ReplicatedStorage.Update_Plugins
+local UPDATE_PLUGINS_EVENT = game.ReplicatedStorage.DELTA_API_STORAGE.Update_Plugins
 
 ----------[Connections]----------
 local RBX_SIGNAL 
