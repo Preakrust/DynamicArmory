@@ -1,5 +1,5 @@
 local event = game.ReplicatedStorage.DELTA_API_STORAGE.Events.Server.Update
-local API = script.Parent.Parent.Parent.ModuleScript
+local API = script.Parent.Parent.Parent.ServerModule
 local Required_API = require(API)
 
 local RBX_SIGNAL 
@@ -8,7 +8,7 @@ local c
 local L 
 
 
-game.ReplicatedStorage.Update_Plugins.Event:Connect(function(data)
+game.ReplicatedStorage.DELTA_API_STORAGE.Update_Plugins.Event:Connect(function(data)
     local Inpsecting = false
     
     if data.Method == "Equipped" then
