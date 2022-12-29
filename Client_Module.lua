@@ -30,7 +30,7 @@ local Storage = ReplicatedStorage:WaitForChild("DELTA_API_STORAGE")
 local ServerEvent = Storage.Events.Client.Update
 local ServerEvent2 = Storage.Events.Client.Update2
 
-local UpdatePlugins = ReplicatedStorage.Update_Plugins
+local UpdatePlugins = ReplicatedStorage.DELTA_API_STORAGE.Update_Plugins
 
 ----------[Local functions]----------
 
