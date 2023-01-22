@@ -1,66 +1,66 @@
-local DeltaAPI = {
+local DynamicArmory = {
 	Framework = { -- This is NOT a configuration, do not modify these values
 		Player = {
-			Character = nil,
+			CurrentPlayer = game.Players.PlayerAdded:Wait(),
+			CurrentCharacter = game.Players.PlayerAdded:Wait().Character or game.Players.PlayerAdded:Wait().CharacterAppearanceLoaded:Wait(),
+			DeviceType = "",
 		},
+		
+		Gun = {
+			CurrentTool = nil,
 
-		Tool = {
-			Config = nil,
-			Equipped = false,
-			Tool = nil,
+			Models = {
+				GunModel = nil,
+			},
+
 			_Stats = {
-				Ammo = nil,
+				ModConfig = nil,
+				Id = "",
+
+				Equipped = false,
 				Shooting = false,
 				Inspecting = false,
 				Bolting = false,
 				Aiming = false,
+
+				Ammo = 0,
+				Mags = 0,
+				MaxMags = 0,
+
+				Shells = 0,
+				ReserveShells = 0,
+				MaxReserveShells = 0,
 			}
 		},
-
-		Models = {
-			Gun = {
-				Model = nil,
-			},
-		},
+		
 	},
-
 }
 
---[[Long story]]
-local FunctionToRender = {}
 
-local Player
-local Character
+-----------------------------
+----DynamicArmory values-----
+-----------------------------
 
---[[ Services ]]--
-local Services = {
-	ReplicatedStorage = game:GetService("ReplicatedStorage"),
-	UserInputService = game:GetService("UserInputService"),
-	RunService = game:GetService("RunService"),
-}
+local DynamicArmoryFramework = DynamicArmory.Framework
+local DynamicArmoryStorage = game.ReplicatedStorage:WaitForChild("DynamicArmoryStorage")
+local Functions = DynamicArmory.Functions
 
---[[ Storage ]]--
-local APIStorage = Services.ReplicatedStorage:WaitForChild("DynamicArmoryStorage")
+local UpdateServer = DynamicArmoryStorage.Events:WaitForChild("UpdateServer")
+local UpdateClient = DynamicArmoryStorage.Events:WaitForChild("UpdateClient")
 
-local Storage = {
-	Events = APIStorage:WaitForChild("Events"),
-	Models = APIStorage:WaitForChild("Models"),
-}
+-----------------------------
+-------Libraries-------------
+-----------------------------
 
-local Modules = {
-	MainLibrary = require(script.Parent.Library.MainLibrary)
-}
+local SecurityLibrary = require(script.Parent.Library.SecurityLibrary)
+local MainLibrary = require(script.Parent.Library.MainLibrary)
 
-local Misc = {
-	ID = "gWdfUwYCls7oMF3ov6PBYuI76kSQwGYCyoOsVAV",
-}
+-----------------------------
+-------Player values---------
+-----------------------------
 
-local function ServerCheck ()
-
-end
-
-local RobloxSignal
-
+local Player = DynamicArmoryFramework.Player.CurrentPlayer
+local Character = DynamicArmoryFramework.Player.CurrentCharacter
 
 
 function DeltaAPI.New()
