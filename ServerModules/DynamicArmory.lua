@@ -54,6 +54,7 @@ local UpdateClient = DynamicArmoryStorage.Events:WaitForChild("UpdateClient")
 
 local SecurityLibrary = require(script.Parent.Library.SecurityLibrary)
 local MainLibrary = require(script.Parent.Library.MainLibrary)
+local RemoteControlLibrary = require(script.Parent.Library.RemoteControlLibrary)
 
 -----------------------------
 -------Player values---------
@@ -62,6 +63,59 @@ local MainLibrary = require(script.Parent.Library.MainLibrary)
 local Player = DynamicArmoryFramework.Player.CurrentPlayer
 local Character = DynamicArmoryFramework.Player.CurrentCharacter
 
+-----------------------------
+-------Gun values------------
+-----------------------------
+
+local DynamicArmoryGun = DynamicArmoryFramework.Gun
+
+-----------------------------
+---------Gun Tool------------
+-----------------------------
+
+local DynamicArmoryCurrentTool = DynamicArmoryGun.CurrentTool
+
+local DynamicArmoryToolDestroyed = false
+
+-----------------------------
+--------Gun Models-----------
+-----------------------------
+
+local DynamicArmoryCurrentToolModels = DynamicArmoryGun.Models
+
+local DynamicArmoryCurrentGunModel = DynamicArmoryCurrentToolModels.GunModel
+
+-----------------------------
+---------Gun Stats-----------
+-----------------------------
+
+local DynamicArmoryIsGunEquiped = DynamicArmoryGun._Stats.Equipped
+local DynamicArmoryIsGunShooting = DynamicArmoryGun._Stats.Shooting
+local DynamicArmoryIsGunBolting = DynamicArmoryGun._Stats.Bolting
+local DynamicArmoryIsGunAiming = DynamicArmoryGun._Stats.Aiming
+
+-----------------------------
+--------Gun ammo-------------
+-----------------------------
+
+local DynamicArmoryGunAmmo = DynamicArmoryGun._Stats.Ammo
+local DynamicArmoryMags = DynamicArmoryGun._Stats.Mags
+local DynamicArmoryMaxMags = DynamicArmoryGun._Stats.MaxMags
+
+local DynamicArmoryGunShells = DynamicArmoryGun._Stats.Ammo
+local DynamicArmoryGunReserveShells = DynamicArmoryGun._Stats.ReserveShells
+local DynamicArmoryGunMaxReserveShells = DynamicArmoryGun._Stats.MaxReserveShells
+
+-----------------------------
+---------Gun Misc------------
+-----------------------------
+
+local DynamicArmoryGunSettings = DynamicArmoryGun._Stats.ModConfig
+local DynamicArmoryGunId = DynamicArmoryGun._Stats.Id
+
+function DynamicArmory.DynamicArmoryWeapon ()
+	
+end
 
 function DeltaAPI.New()
 
@@ -122,10 +176,10 @@ function DeltaAPI.New()
 
 end
 
-DeltaAPI.Functions = {
+DynamicArmory.Functions = {
 	Player = {
 		character = Character
 	}
 }
 
-return DeltaAPI
+return DynamicArmory
