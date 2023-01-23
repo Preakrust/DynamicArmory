@@ -1,11 +1,10 @@
 local DynamicArmory = {
 	Framework = { -- This is NOT a configuration, do not modify these values
 		Player = {
-			CurrentPlayer = game.Players.PlayerAdded:Wait(),
-			CurrentCharacter = game.Players.PlayerAdded:Wait().Character or game.Players.PlayerAdded:Wait().CharacterAppearanceLoaded:Wait(),
-			DeviceType = "",
+			CurrentPlayer = nil,
+			CurrentCharacter =nil,
 		},
-		
+
 		Gun = {
 			CurrentTool = nil,
 
@@ -32,7 +31,7 @@ local DynamicArmory = {
 				MaxReserveShells = 0,
 			}
 		},
-		
+
 	},
 }
 
@@ -52,16 +51,19 @@ local UpdateClient = DynamicArmoryStorage.Events:WaitForChild("UpdateClient")
 -------Libraries-------------
 -----------------------------
 
-local SecurityLibrary = require(script.Parent.Library.SecurityLibrary)
-local MainLibrary = require(script.Parent.Library.MainLibrary)
-local RemoteControlLibrary = require(script.Parent.Library.RemoteControlLibrary)
-
+local SecurityLibrary = require(script.Parent.Libraries.SecurityLibrary)
+local MainLibrary = require(script.Parent.Libraries.MainLibrary)
+local RemoteControlLibrary = require(script.Parent.Libraries.RemoteControlLibrary)
+local DB = require(script.Parent.Extensions.DynamicDBToolkit)
 -----------------------------
 -------Player values---------
 -----------------------------
 
 local Player = DynamicArmoryFramework.Player.CurrentPlayer
 local Character = DynamicArmoryFramework.Player.CurrentCharacter
+
+Player = game.Players.PlayerAdded:Wait()
+Character = Player.Character or Player.CharacterAppearanceLoaded:Wait()
 
 -----------------------------
 -------Gun values------------
@@ -88,98 +90,186 @@ local DynamicArmoryCurrentGunModel = DynamicArmoryCurrentToolModels.GunModel
 -----------------------------
 ---------Gun Stats-----------
 -----------------------------
-
-local DynamicArmoryIsGunEquiped = DynamicArmoryGun._Stats.Equipped
-local DynamicArmoryIsGunShooting = DynamicArmoryGun._Stats.Shooting
-local DynamicArmoryIsGunBolting = DynamicArmoryGun._Stats.Bolting
-local DynamicArmoryIsGunAiming = DynamicArmoryGun._Stats.Aiming
+local DynamicArmoryGunStats = DynamicArmoryGun._Stats
+local DynamicArmoryIsGunEquiped = DynamicArmoryGunStats.Equipped
+local DynamicArmoryIsGunShooting = DynamicArmoryGunStats.Shooting
+local DynamicArmoryIsGunBolting = DynamicArmoryGunStats.Bolting
+local DynamicArmoryIsGunAiming = DynamicArmoryGunStats.Aiming
 
 -----------------------------
 --------Gun ammo-------------
 -----------------------------
 
-local DynamicArmoryGunAmmo = DynamicArmoryGun._Stats.Ammo
-local DynamicArmoryMags = DynamicArmoryGun._Stats.Mags
-local DynamicArmoryMaxMags = DynamicArmoryGun._Stats.MaxMags
+local DynamicArmoryGunAmmo = DynamicArmoryGunStats.Ammo
+local DynamicArmoryMags = DynamicArmoryGunStats.Mags
+local DynamicArmoryMaxMags = DynamicArmoryGunStats.MaxMags
 
-local DynamicArmoryGunShells = DynamicArmoryGun._Stats.Ammo
-local DynamicArmoryGunReserveShells = DynamicArmoryGun._Stats.ReserveShells
-local DynamicArmoryGunMaxReserveShells = DynamicArmoryGun._Stats.MaxReserveShells
+local DynamicArmoryGunShells = DynamicArmoryGunStats.Ammo
+local DynamicArmoryGunReserveShells = DynamicArmoryGunStats.ReserveShells
+local DynamicArmoryGunMaxReserveShells = DynamicArmoryGunStats.MaxReserveShells
 
 -----------------------------
 ---------Gun Misc------------
 -----------------------------
 
-local DynamicArmoryGunSettings = DynamicArmoryGun._Stats.ModConfig
-local DynamicArmoryGunId = DynamicArmoryGun._Stats.Id
+local DynamicArmoryGunSettings = DynamicArmoryGunStats.ModConfig
+local DynamicArmoryGunId = DynamicArmoryGunStats.Id
 
-function DynamicArmory.DynamicArmoryWeapon ()
-	
-end
+DynamicArmory.CoreFunctions = {--//PLEASE DON'T USE IT'S FOR DEVS ONLY!
+	-----------------------------
+	--------(DEV ONLY)-----------
+	-----------------------------
 
-function DeltaAPI.New()
+	Stat = function (n, v)
+		if getfenv(2).script == script then 
+			if n or v then
+				if DynamicArmoryGunStats[n] ~= nil then
+					DynamicArmoryGunStats[n] = v
+				else
+					warn("DynamicArmoryCore: Invalid Child, Arg n is not a valid member of DynamicArmoryGunStats.")
+				end
+			else
+				if not n then
+					warn("DynamicArmoryCore: Arg Missing, Arg = n.")
+				end
 
-	Player = game.Players.PlayerAdded:Wait()
-	Character = Player.Character or Player.CharacterAppearanceLoaded:Wait()
+				if not v then
+					warn("DynamicArmoryCore: Arg Missing, Arg = v.")
+				end
+			end
 
-
-	--[[Functions]]--
-
-
-	local function Auth (Tool)
-		if not Tool then return end
-
-		if Tool:FindFirstChild(Misc.ID) then return true else return false end
-	end
-
-	local function ChildAdded (Child)
-		if not Child:IsA("Tool") or not Child then return end
-
-		if not Auth(Child) or not Child:FindFirstChild("ID") then return end
-
-		
-		DeltaAPI.Framework.Tool.Tool = Child
-		DeltaAPI.Framework.Player.Character = Character
-
-		local EquipStatus, Failed = pcall(function()
-			DeltaAPI.Framework.Tool.Config = Modules.MainLibrary.GetConfig(Child)
-			DeltaAPI.Framework.Models.Gun.Model = Modules.MainLibrary.EquipGun(Character,tostring(Child:FindFirstChild("ID").Value), DeltaAPI.Framework.Tool.Config)
-			
-			RobloxSignal = game:GetService("RunService").Stepped:Connect(function()
-				Character.Torso["Left Shoulder"].Transform = CFrame.new(0, 0, 0)
-				Character.Torso["Right Shoulder"].Transform = CFrame.new(0, 0, 0)
-			end)
-		end)
-		
-		if Failed then
-			print(Failed)
+		else
+			warn("DynamicArmoryCore: Tried to call a CoreFunction from an unauthorized script, CoreFunctions are meant to be used by developers only and can cause big security issues if not used properly.")
 		end
+	end,
 
-	end
-
-	local function ChildRemoved (Child)
-		if Child == DeltaAPI.Framework.Tool.Tool then
-			--RobloxSignal:Disconnect()
-			Modules.MainLibrary.UnEquip(Character, DeltaAPI.Framework.Models.Gun.Model, DeltaAPI.Framework.Tool.Config)
-		end
-	end
-
-	---[[Eqquip and Uneqquiped]]---
-	
-	Character.ChildAdded:Connect(function(Child)
-		ChildAdded(Child)
-	end)
-
-	Character.ChildRemoved:Connect(function(Child)
-		ChildRemoved(Child)
-	end)
-
-end
+	-----------------------------
+	--------(DEV ONLY)-----------
+	-----------------------------
+}
 
 DynamicArmory.Functions = {
-	Player = {
-		character = Character
+
+	Gun = {
+		Shoot = function (Origin, Direction)
+			
+			-----------------------------
+			--------Core stuff-----------
+			-----------------------------
+			
+			DynamicArmory.CoreFunctions.Stat("Shooting", true)
+			
+			-----------------------------
+			----------Values-------------
+			-----------------------------
+			
+			local Params = RaycastParams.new()
+			
+			-----------------------------
+			----------Raycast------------
+			-----------------------------
+			
+			Params.FilterType = Enum.RaycastFilterType.Blacklist
+			Params.FilterDescendantsInstances = {Character}
+			
+			local Result = workspace:Raycast(Origin, Direction * 500, Params)
+			
+			-----------------------------
+			----------Analyze------------
+			-----------------------------
+			if Result then
+				if Result.Instance.Name ~= "Terrain" then
+					if Result.Instance:IsA("BasePart") then
+						if Result.Instance.Parent:FindFirstChild("Humanoid") then
+							Result.Instance.Parent:FindFirstChild("Humanoid"):TakeDamage(50)
+						end
+					end
+				end
+			end
+			
+			
+		end,
 	}
+
+
+
+
+
+
+
+
+
+
+
+
 }
+
+function DynamicArmory.DynamicArmoryWeapon ()
+
+	-----------------------------
+	---------Core stuff----------
+	-----------------------------
+
+	local Core = DynamicArmory.CoreFunctions
+	local UpdateCore = Core.Stat
+
+	-----------------------------
+	-------Starter stuff---------
+	-----------------------------
+
+	SecurityLibrary.LoadDB()
+
+	-----------------------------
+	-----Internal Functions------
+	-----------------------------
+
+
+	local function ChildAdded (Tool)
+
+		-----------------------------
+		----Is the tool is a gun?----
+		-----------------------------
+
+		if not SecurityLibrary.Authed(Tool) then return end
+
+		-----------------------------
+		---Set the equipped status---
+		-----------------------------
+
+		UpdateCore("Equipped", true)
+
+		DynamicArmoryGunStats.Equipped = true
+
+		-----------------------------
+		------Set current tool-------
+		-----------------------------
+
+		DynamicArmoryCurrentTool = Tool
+
+		-----------------------------
+		--------Remote Events--------
+		-----------------------------
+
+		UpdateServer.OnServerEvent:Connect(function(Plr, Args)
+
+
+			if SecurityLibrary.CheckRemote(Args, DynamicArmoryGunStats) then 
+				if Args["Requested_Method"] == "Shoot" then
+					DynamicArmory.Functions.Gun.Shoot(Args.O, Args.D)
+				end
+			end
+			
+		end)
+
+	end
+
+
+
+	Character.ChildAdded:Connect(function(Tool)
+		ChildAdded(Tool)
+	end)
+end
+
+
 
 return DynamicArmory
