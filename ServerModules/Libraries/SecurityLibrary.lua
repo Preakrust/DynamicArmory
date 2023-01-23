@@ -1,6 +1,6 @@
 local module = {}
 
-local DB = require(script.Parent.Parent.Extensions.DynamicDBToolkit)
+
 
 function module.Authed (Tool: Tool)
 	
@@ -95,8 +95,11 @@ end
 
 function module.LoadDB ()
 	if module.BDToolkitEnabled() then
+		local DB = require(script.Parent.Parent.Extensions.DynamicDBToolkit)
+		
 		DB.InnitDB()
 	end
 end
 
 return module
+
