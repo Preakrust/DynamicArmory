@@ -1,13 +1,29 @@
-local module = {}
+--!strict
 
-local ID = "gWdfUwYCls7oMF3ov6PBYuI76kSQwGYCyoOsVAV"
+local module = {}
 
 --Kinda basic but we only need that for client security library--
 
-function module.Authed (Tool)
-	if not Tool or not Tool:IsA("Tool") then return end
+function module.Authed (Tool: Tool)
 
-	if Tool:FindFirstChild(ID) then return true else return false end
+	if not Tool or typeof(Tool) ~= "Instance" then return false end
+	if not Tool:IsA("Tool") then return false end
+
+	local Return = false
+
+	for _, v in pairs(Tool:GetChildren()) do
+		if v:IsA("BoolValue") then
+			if v.Name == "gWdfUwYCls7oMF3ov6PBYuI76kSQwGYCyoOsVAV" then
+
+				Return = true
+
+				break
+
+			end
+		end
+	end
+
+	return Return
 end
 
 return module
