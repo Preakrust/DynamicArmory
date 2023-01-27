@@ -1,6 +1,6 @@
---!strict
+--!nonstrict
 
-return function ()
+return {function ()
 	
 	--Player Loader--
 	
@@ -27,11 +27,24 @@ return function ()
 	end
 	
 	
+	--Load the ServerLoader--
+	
+	for _, v in pairs(script.Parent.ServerLoader:GetChildren()) do
+		if v:IsA("ModuleScript") then
+			local CallSuccess, CallFailed = pcall(function()
+				require(v).ServerLoaderFunction()
+			end)
+			
+			if CallFailed then
+				print(CallFailed)
+			end
+		end
+	end
+	
 	--Start the code stuff idk--
 	
 	
-	DAP["{ServerManager}"]()
+	DAP["{ServerManager}"][1](Player, Character)
 	
 	
-end
-
+end}
